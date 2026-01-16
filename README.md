@@ -39,3 +39,101 @@ graph TD
     end
     style B fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#bbf,stroke:#333,stroke-width:2px
+
+### Rationale
+
+- **Separation of Tiers:**  
+  Reduces attack surface; compromising the application server does not directly expose the database.
+
+- **Least Privilege:**  
+  Security Groups act as firewalls. For example, RDS inbound traffic is allowed **only** from the EC2 Security Group.
+
+- **Free Tier Optimization:**  
+  - EC2: `t3.micro` (2 vCPU, 1 GB RAM)  
+  - RDS: `db.t4g.micro`  
+  - Minimal storage to stay within Free Tier limits
+
+- **Scalability Potential:**  
+  Architecture can easily support Auto Scaling Groups or Load Balancers in a production environment.
+
+- **Security Enhancements:**  
+  - No root SSH access  
+  - Key-based authentication  
+  - Installation folder removed post-setup to prevent exploitation
+
+---
+
+### Implementation Steps
+
+Below is a step-by-step guide to replicating this deployment.  
+All steps were performed on **January 16, 2026**, using the **AWS Console** in the **eu-west-1** region (selected for low latency from Port Harcourt, Nigeria).
+
+---
+
+### Step 1: AWS Account Setup
+
+- Sign up or log in to **AWS Free Tier**
+- Select region: **eu-west-1**
+
+**Artifacts:**  
+- AWS Console Dashboard
+
+---
+
+### Step 2: Configure Security Groups
+
+- **PrestaShop-EC2-SG**
+  - Inbound SSH (My IP only)
+  - HTTP (80) and HTTPS (443) from Anywhere
+
+- **PrestaShop-RDS-SG**
+  - Inbound MySQL (3306) allowed **only** from `PrestaShop-EC2-SG`
+
+**Artifacts:**  
+- EC2 Security Group  
+- RDS Security Group  
+
+**Decision:**  
+Restricts database access to the application server only, aligning with **zero-trust security principles**.
+
+---
+
+### Step 3: Launch RDS Database
+
+- Engine: **MySQL (Free Tier)**
+- Instance type: `db.t4g.micro`
+- Storage: 20 GB SSD
+- Endpoint: `prestashop-db.xxxxx.rds.amazonaws.com` (private, no public access)
+- Database name: `prestashop`
+- Username: `admin`
+
+**Artifacts:**  
+- RDS Creation Wizard  
+- RDS Instance Details  
+
+**Decision:**  
+Single-AZ deployment for cost efficiency; password-based authentication with strong credentials.
+
+---
+
+### Step 4: Launch EC2 Instance
+
+- AMI: **Amazon Linux 2023**
+- Instance type: `t3.micro`
+- Key pair: New PEM file for SSH access
+- Public IP: Enabled
+
+**Artifacts:**  
+- EC2 Launch Wizard  
+- EC2 Instance Details  
+
+**Decision:**  
+Amazon Linux provides a lightweight and secure base image; public IP enables external access for the web application.
+
+---
+
+### Step 5: Install PrestaShop on EC2
+
+- SSH into instance:
+  ```bash
+  ssh -i key.pem ec2-user@public-dns
