@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ssh -i "your-key-pair-name.pem" ec2-user@your-instance-public-ip-or-dns
