@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Install Prestashop
+
+cd /var/www/html
+sudo wget https://github.com/PrestaShop/PrestaShop/releases/download/8.1.7/prestashop_8.1.7.zip  # Check for latest at https://www.prestashop.com/en/versions
+sudo apt install -y unzip
+sudo unzip prestashop_9.0.2.zip
+sudo mv prestashop/* .
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
