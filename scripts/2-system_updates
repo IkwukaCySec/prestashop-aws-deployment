@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Update Debian/Ubuntu Linux Systems
+
+sudo apt update && sudo apt upgrade -y
