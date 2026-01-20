@@ -22,24 +22,6 @@ The architecture follows a multi-tier design to enhance security, scalability, a
 ### High-Level Architecture Diagram
 Below is a Mermaid diagram for visual representation (renders automatically on GitHub). For a more detailed version, see `/diagrams/architecture-diagram.png` (export from tools like draw.io or Lucidchart).
 
-```mermaid
-graph TD
-    A[User Browser] -->|HTTP/HTTPS| B[EC2 Instance: PrestaShop App]
-    B -->|MySQL Port 3306| C[RDS Instance: MySQL Database]
-    D[Security Group: EC2-SG] --> B
-    E[Security Group: RDS-SG] --> C
-    F[AWS VPC] --> B
-    F --> C
-    subgraph "Public Access"
-        A
-        B
-    end
-    subgraph "Private Access"
-        C
-    end
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-
 ### Rationale
 
 - **Separation of Tiers:**  
