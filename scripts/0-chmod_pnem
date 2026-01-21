@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-chmod 400 prestashop-key.pnem
+chmod 400 prestashop_key.pnem
